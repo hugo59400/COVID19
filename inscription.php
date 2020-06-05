@@ -15,7 +15,7 @@ if(!empty($_POST)){
 	$NomPrenom = htmlspecialchars(ucfirst(trim($NomPrenom)));
 	$Password = trim($Password);
 	$PasswordConfirmation = trim($PasswordConfirmation);
-		
+	//alertes si cases non replits	
 	if(empty($NomPrenom)){
 		$valid = false;
 		$_SESSION['flash']['danger'] = "Veuillez mettre votre nom et votre prénom !";
@@ -28,12 +28,13 @@ if(!empty($_POST)){
 	
 	$req = $DB->query('Select mail from user where mail = :mail', array('mail' => $Mail));
 	$req = $req->fetch();
-	
+	//si mail déjà existant
 	if(!empty($Mail) && $req['mail']){
 		$valid = false;
 		$_SESSION['flash']['danger'] = "Ce mail existe déjà";
 		
 	}
+	//si le mail n'est pas dans les normes, ex : pas de @ ou de .com
 	if(!preg_match("#^[a-z0-9._-]+@[a-z0-9._-]{2,}\.[a-z]{2,4}$#", $Mail)){
 		$valid = false;
 		$_SESSION['flash']['danger'] = "Veuillez mettre un mail conforme !";
@@ -56,7 +57,9 @@ if(!empty($_POST)){
 	}
 		
 	if($valid){	
-$id_public = uniqid();		
+//création d'une id unique pour ce user
+$id_public = uniqid();	
+//commanade d'insertion
 $DB->insert('Insert into user (nomPrenom, mail, telephone, adresse, nbFoyer, password, idpublic) values (:nomPrenom, :mail, :telephone, :adresse, :nbFoyer, :password, :idpublic)', array('nomPrenom' => $NomPrenom, 'mail' => $Mail, 'telephone' => $telephone, 'adresse' => $adresse, 'nbFoyer' =>$nbFoyer, 'password' => crypt($Password, 'lolTuMoraPa'), 'idpublic' => $id_public));
 $_SESSION['flash']['success'] = "Votre inscription a bien été prise en compte, connectez-vous !";
 header('Location: connexion.php');
@@ -90,7 +93,7 @@ exit;
 	 <br/>
 	                
 	 <form method="post" action="inscription.php">
-	<label>Nom et Pénom</label>
+	<label>Nom et Prénom</label>
         <br/>
 		<?php
 	if(isset($error_nomPrenom)){
@@ -104,7 +107,7 @@ exit;
 <input  name="Mail"  value="<?php if (isset($Mail)) echo $Mail; ?>" required="required">	
 	
 	<br>
-	<label>Téléhone</label>
+	<label>Téléphone</label>
 	<br>
 <input  type="tel" name="telephone"  value="<?php if (isset($telephone)) echo $telephone; ?>" required="required">	
 	

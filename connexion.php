@@ -13,7 +13,7 @@ if(!empty($_POST)){
 	
 	$Mail = htmlspecialchars(trim($Mail));
 	$Password = trim($Password);
-		
+//si les cases ne sont pas remplits: alertes	
 	if(empty($Mail)){
 		$valid = false;
 		$_SESSION['flash']['warning'] = "Veuillez renseigner votre mail !";
@@ -23,6 +23,8 @@ if(!empty($_POST)){
 		$valid = false;
 		$error_password = "Veuillez renseigner un mot de passe !";
 	}
+	
+	//envoie de la requête
 $req = $DB->query('Select * from user where mail = :mail and password = :password', array('mail' => $Mail, 'password' => crypt($Password, 'lolTuMoraPa')));
 $req = $req->fetch();
 		
@@ -30,8 +32,8 @@ $req = $req->fetch();
 		$valid = false;
 		$_SESSION['flash']['danger'] = "Votre mail ou mot de passe ne correspondent pas";
 	}
+	//si la connection est valide, on met toutes les info du user dans des sessions
 	if($valid){
-		//$_SESSION['id'] = $req['id'];
 		$_SESSION['id'] = $req['idpublic'];
 		$_SESSION['nomPrenom'] = $req['Prenom'];
 		$_SESSION['mail'] = $req['mail'];
@@ -39,22 +41,18 @@ $req = $req->fetch();
 		$_SESSION['adresse'] = $req['adresse'];
 		$_SESSION['nbFoyer'] = $req['nbFoyer'];
 		$_SESSION['password'] = $req['password'];
-		
 		$_SESSION['flash']['info'] = "Bonjour " . $_SESSION['nomPrenom'];
 		header('Location: accueil.php');
 		exit;
 			
 	}
-	
 }	
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
 	<header>
 	<title>Connexion</title>
 	</header>
-	
 	<body>
 		   	   		
 		<?php 
@@ -93,6 +91,9 @@ $req = $req->fetch();
 <input class="input" type="password" name="Password" placeholder="Mot de passe" value="<?php if (isset($Password)) echo $Password; ?>" required="required">
 	<br>
 	<br>                   
-<button type="submit">Se connecter</button>                                                          
+<button type="submit">Se connecter</button> 
+	<br>
+	<br>
+	<button type="button" onclick="self.location.href='connexionPersonnel.php'">Je suis du personnel</button>
 </body>
 </html>
