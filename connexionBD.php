@@ -3,9 +3,9 @@
 class connexionDB {
     private $host ='localhost';
     // en dessous nom de bdd  
-    private $name='id13854121_coromasque';
-    private $user="id13854121_root";
-    private $pass='C0l_Car_B13n';
+    private $name='coromasque';
+    private $user="root";
+    private $pass='';
     private $connexion;
     // au dessus variable d'instance qui seront accessible dans tout le code de la classe 
 
